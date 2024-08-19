@@ -1,0 +1,18 @@
+version: "3.8" # docker-composeのバージョン選択
+
+services:
+  node:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./vite-vue:/app:cached
+      # ↓↓↓コメントアウトしたまま↓↓↓
+      # - node_modules:/app/node_modules # 特定のパスを独立した名前付きボリュームとして定義
+    environment:
+      - HOST=0.0.0.0
+      - CHOKIDAR_USEPOLLING=true
+    tty: true
+    ports:
+      - "5173:5173"
+    command: yarn dev --host
