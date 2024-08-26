@@ -1,30 +1,54 @@
-<script setup>
-import HelloWorld from './components/HelloWorld.vue'
+<script>
+import TodoAdd from "./components/TodoAdd.vue";
+
+export default {
+  components: {
+    TodoAdd,
+  },
+  data() {
+    return {
+      newTodoText: '',
+      todos: [
+         { isDone: false, text: 'ToDoの文字列'}
+      ],
+    }
+  },
+  methods: {
+    addTodo() {
+      if (!this.newTodoText) return alert('文字を入力してください')
+      this.todos.push({
+        isDone: false,
+        text: this.newTodoText,
+      })
+      this.newTodoText = ''
+    },
+    clearDoneTodos() {
+      this.todos = this.todos.filter((todo) => !todo.isDone)
+    },
+  },
+}
 </script>
 
 <template>
-  <div>
-    <a href="https://vitejs.dev" target="_blank">
-      <img src="/vite.svg" class="logo" alt="Vite logo" />
-    </a>
-    <a href="https://vuejs.org/" target="_blank">
-      <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-    </a>
-  </div>
-  <HelloWorld msg="Vite + Vue" />
+  <h1>My ToDo App</h1>
+  <TodoAdd @delete-done="clearDoneTodos" @add-todo="addTodo"/>
+  <p v-if="todos.length === 0">ToDoがまだありません！</p>
+  <ul v-else>
+    <li v-for="todo in todos">
+      <input type="checkbox" v-model="todo.isDone" /><span
+        :class="{ 'todo-done': todo.isDone }"
+        >{{ todo.text }}</span
+      >
+    </li>
+  </ul>
 </template>
 
-<style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+<style>
+body {
+  background-color: #eee;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+
+.todo-done {
+  text-decoration: line-through;
 }
 </style>
